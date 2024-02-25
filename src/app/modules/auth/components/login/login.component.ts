@@ -3,8 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subscription, Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
 import { UserModel } from '../../models/user.model';
-import { AuthService } from '../../services/auth.service';
+import { AuthService, UserType } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ErrorResponse } from 'src/app/interfaces/errorResponse';
 
 @Component({
   selector: 'app-login',
@@ -19,6 +20,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   };
   loginForm: FormGroup;
   hasError: boolean;
+  errorMessage!: string;
   returnUrl: string;
   isLoading$: Observable<boolean>;
 
@@ -74,16 +76,24 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   submit() {
     this.hasError = false;
+    this.errorMessage = '';
     const loginSubscr = this.authService
       .login(this.f.email.value, this.f.password.value)
       .pipe(first())
-      .subscribe((user: UserModel | undefined) => {
-        if (user) {
-          this.router.navigate([this.returnUrl]);
-        } else {
+      .subscribe({
+        next: (user: UserModel | undefined) => {
+          console.log('User: ', user);
+          if (user) {
+            this.router.navigate([this.returnUrl]);
+          }
+        },
+        error: (err: Error) => {
           this.hasError = true;
-        }
+          let errorObject = JSON.parse(err.message);
+          this.errorMessage = errorObject.name;
+        },
       });
+
     this.unsubscribe.push(loginSubscr);
   }
 
