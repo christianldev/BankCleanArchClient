@@ -1,6 +1,5 @@
-export class AddressModel {
-  addressLine: string;
-  city: string;
-  state: string;
-  postCode: string;
+export interface AddressModel {
+  country: string;
+  state_name: string;
+  city_name: string;
 }

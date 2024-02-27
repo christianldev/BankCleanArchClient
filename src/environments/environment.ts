@@ -8,6 +8,8 @@ export const environment = {
   USERDATA_KEY: 'authf649fc9a5f55',
   isMockEnabled: true,
   apiUrl: 'https://localhost:7238',
+  CountriesUniversalAPIToken: 'https://www.universal-tutorial.com/api',
+
   appThemeName: 'Metronic',
   appPurchaseUrl: 'https://1.envato.market/EA4JP',
   appHTMLIntegration:
